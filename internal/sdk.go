@@ -581,12 +581,14 @@ func (b *Sdk) GetLocalSdkPackage(version Version) (*Package, error) {
 	}
 	for _, d := range dir {
 		if d.IsDir() {
-			split := strings.SplitN(d.Name(), "-", 2)
-			if len(split) != 2 {
+			dir_name := d.Name()
+			split_index := strings.LastIndex(dir_name, "-")
+			if split_index == -1 {
 				continue
 			}
-			name := split[0]
-			v := split[1]
+
+			name := dir_name[:split_index]
+			v := dir_name[split_index+1:]
 			logger.Debugf("Load SDK package item: name:%s, version: %s \n", name, v)
 			items[name] = &Info{
 				Name:    name,
